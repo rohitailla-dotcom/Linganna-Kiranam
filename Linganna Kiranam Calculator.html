@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linganna Kiranam Calculator</title>
+
+<style>
+body{
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    background:#f5f5f5;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align:center;
+    color:#1e88e5;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    background:#1e88e5;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:20px;
+    padding:15px;
+    background:#f1f8e9;
+    border-radius:10px;
+}
+
+.result p{
+    margin:12px 0;
+    font-size:18px;
+}
+
+.value{
+    font-weight:bold;
+    color:#2e7d32;
+}
+
+.status{
+    font-size:24px;
+    font-weight:bold;
+    text-align:center;
+    padding-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🏪 Linganna Kiranam Calculator</h2>
+
+<label>Commodity</label>
+<input type="text" id="commodity">
+
+<label>Box Cost (₹)</label>
+<input type="number" id="boxCost">
+
+<label>Units in Box</label>
+<input type="number" id="units">
+
+<label>MRP Per Unit (₹)</label>
+<input type="number" id="mrp">
+
+<label>Desired Profit %</label>
+<input type="number" id="profit" value="15">
+
+<label>Actual Selling Price Per Unit (₹)</label>
+<input type="number" id="sellPrice">
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result">
+
+<p>Cost Per Unit:
+<span class="value" id="costUnit">₹0.00</span>
+</p>
+
+<p>Final Sales Value (MRP × Units):
+<span class="value" id="finalSales">₹0.00</span>
+</p>
+
+<p>Maximum Purchase Price:
+<span class="value" id="maxPurchase">₹0.00</span>
+</p>
+
+<p>Suggested Selling Price:
+<span class="value" id="suggestedPrice">₹0.00</span>
+</p>
+
+<p>Actual Profit:
+<span class="value" id="actualProfit">₹0.00</span>
+</p>
+
+<p>Actual Profit %:
+<span class="value" id="actualProfitPercent">0.00%</span>
+</p>
+
+<div class="status" id="status"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function calculate(){
+
+    let boxCost = parseFloat(document.getElementById("boxCost").value) || 0;
+    let units = parseFloat(document.getElementById("units").value) || 0;
+    let mrp = parseFloat(document.getElementById("mrp").value) || 0;
+    let profit = parseFloat(document.getElementById("profit").value) || 0;
+    let sellPrice = parseFloat(document.getElementById("sellPrice").value) || 0;
+
+    if(units <= 0){
+        alert("Units must be greater than zero");
+        return;
+    }
+
+    let costPerUnit = boxCost / units;
+
+    let finalSalesValue = mrp * units;
+
+    let maxPurchasePrice =
+        finalSalesValue / (1 + profit / 100);
+
+    let suggestedSellPrice =
+        costPerUnit * (1 + profit / 100);
+
+    let actualProfit =
+        (sellPrice * units) - boxCost;
+
+    let actualProfitPercent =
+        boxCost > 0
+        ? (actualProfit / boxCost) * 100
+        : 0;
+
+    document.getElementById("costUnit").innerHTML =
+        "₹" + costPerUnit.toFixed(2);
+
+    document.getElementById("finalSales").innerHTML =
+        "₹" + finalSalesValue.toFixed(2);
+
+    document.getElementById("maxPurchase").innerHTML =
+        "₹" + maxPurchasePrice.toFixed(2);
+
+    document.getElementById("suggestedPrice").innerHTML =
+        "₹" + suggestedSellPrice.toFixed(2);
+
+    document.getElementById("actualProfit").innerHTML =
+        "₹" + actualProfit.toFixed(2);
+
+    document.getElementById("actualProfitPercent").innerHTML =
+        actualProfitPercent.toFixed(2) + "%";
+
+    let status = "";
+
+    if(boxCost <= maxPurchasePrice){
+        status = "🟢 GOOD DEAL";
+    }
+    else if(actualProfit > 0){
+        status = "🟡 LOW PROFIT";
+    }
+    else{
+        status = "🔴 AVOID PURCHASE";
+    }
+
+    document.getElementById("status").innerHTML = status;
+}
+
+</script>
+
+</body>
+</html>
